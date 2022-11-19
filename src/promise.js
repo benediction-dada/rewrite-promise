@@ -73,4 +73,23 @@ class MyPromise {
         })
         return promiseThen
     }
+    static all(arr) {
+        return new Promise ((resolve, reject) => {
+            const result = []
+            let count = 0
+            const addData = (item, index) => {
+                result[index] = item
+                if(++count === arr.length) {
+                    resolve(result)
+                }
+            }
+            arr.forEach((item, index) => {
+                if(item instanceof Promise) {
+                    item.then(val => addData(val, index), reject)
+                } else {
+                    addData(item, index)
+                }
+            });
+        })
+    }
 }
