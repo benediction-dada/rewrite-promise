@@ -76,6 +76,9 @@ class MyPromise {
     finally(callback) {
         return this.then(callback, callback).then(() => this)
     }
+    catch(callback) {
+        return this.then(null, callback)
+    }
     static resolve(val) {
         if(val instanceof Promise) return val
         return new Promise(resolve => resolve(val))
