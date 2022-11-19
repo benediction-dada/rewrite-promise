@@ -139,4 +139,21 @@ class MyPromise {
         })
         
     }
+    static any(arr) {
+        return new Promise((resolve, reject) => {
+            arr.forEach(item => {
+                if(item instanceof Promise) {
+                    item(resolve, () => {
+                        if(++count === arr.length) {
+                            throw { msg: 'all promises were rejected' }
+                        }
+                    })
+                } else {
+                    queueMicrotask(() => {
+                        resolve(item)
+                    })
+                }
+            })
+        })
+    }
 }
