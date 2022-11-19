@@ -73,6 +73,13 @@ class MyPromise {
         })
         return promiseThen
     }
+    static resolve(val) {
+        if(val instanceof Promise) return val
+        return new Promise(resolve => resolve(val))
+    }
+    static reject(reason) {
+        return new Promise((resolve, reject) => reject(reason))
+    }
     static all(arr) {
         return new Promise ((resolve, reject) => {
             const result = []
