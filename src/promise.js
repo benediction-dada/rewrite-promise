@@ -124,4 +124,19 @@ class MyPromise {
             })
         })
     }
+    static race(arr) {
+        return new Promise((resolve, reject) => {
+            const count = 0
+            arr.forEach(item => {
+                if(item instanceof Promise) {
+                    item.then(resolve, reject)
+                } else {
+                    queueMicrotask(() => {
+                        resolve(item)
+                    })
+                }
+            })
+        })
+        
+    }
 }
