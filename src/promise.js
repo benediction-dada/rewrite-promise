@@ -87,9 +87,41 @@ class MyPromise {
                 if(item instanceof Promise) {
                     item.then(val => addData(val, index), reject)
                 } else {
-                    addData(item, index)
+                    queueMicrotask(() => {
+                        addData(item, index)
+                    })
                 }
             });
+        })
+    }
+    static allSettled(arr) {
+        return new Promise((resolve, reject) => {
+            const result = []
+            let count = 0
+            const addData = (status, item, index) => {
+                result[index] = {
+                    status
+                }
+                if(status === FULLFILLED) {
+                    result[index]['value'] = item
+                }
+                if(status === REJECTED) {
+                    result[index]['reason'] = item
+                }
+                if(++count === arr.length) {
+                    result(result)
+                }
+            }
+
+            arr.forEach((item, index) => {
+                if(item instanceof Promise) {
+                    item.then(val => addData(FULLFILLED, val, index), reason => addData(REJECTED, reason, index))
+                } else {
+                    queueMicrotask(() => {
+                        resolve(item)
+                    })
+                }
+            })
         })
     }
 }
